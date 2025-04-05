@@ -1,32 +1,118 @@
-# AlmaBetterRegression
+Here's your updated **Markdown summary** incorporating all the work you've done, including transformations, outlier handling, feature engineering, and modeling. This version is more comprehensive and aligned with your project pipeline:
 
-**Project Summary: Predictive Modeling for Bike Rentals**
+---
 
-**Introduction:**
-Bike-sharing systems have become an integral part of urban transportation, providing a sustainable and convenient alternative. This project focuses on predicting bike rental demand through exploratory data analysis (EDA) and the implementation of predictive models. The dataset used for this analysis includes information on hourly bike rentals, weather conditions, and other relevant factors.
+# 🚲 **AlmaBetterRegression Project – Seoul Bike Sharing Demand Prediction**
 
-**Exploratory Data Analysis (EDA):**
+## **📌 Project Summary: Predictive Modeling for Bike Rentals**
 
-*Hourly Trends:* One key aspect uncovered through EDA is the hourly rental patterns. There is a clear surge in bike rentals during commuting hours, especially in the morning (7-9 AM) and evening (4-7 PM). Conversely, late-night and early-morning hours witness a significant decline in demand. This insight can be invaluable for optimizing bike availability and distribution during peak hours.
+### **📍 Introduction:**
+Bike-sharing systems have become a vital component of urban mobility, offering an eco-friendly, affordable, and flexible transportation mode. This project aims to **predict hourly bike rental demand** using comprehensive **exploratory data analysis (EDA)**, **data preprocessing**, and **machine learning models**. The dataset encompasses **weather, temporal, and seasonal variables** from Seoul's public bike-sharing service.
 
-*Seasonal Patterns:* Seasonal variations also play a crucial role in bike rentals. The dataset reveals that summer and autumn experience the highest demand, likely due to favorable weather conditions. In contrast, winter records the lowest rentals, indicating a weather-related impact on user behavior.
+---
 
-*Weekday vs. Weekend:* Further analysis delves into the differences between weekdays and weekends. Weekdays exhibit higher rental activity, with Tuesday and Wednesday being the most active days. On the weekends, there is a slight dip in demand, with Sunday being the least active day. Understanding these patterns aids in resource allocation and operational planning.
+## **🔎 Exploratory Data Analysis (EDA):**
 
-*Holiday Impact:* The dataset suggests that holidays generally have a lower impact on bike rentals compared to regular days. Rental patterns during holidays follow a smoother distribution, indicating a more consistent demand throughout the day.
+### **Hourly Trends:**
+- Rentals surge during **commute hours** – 7–9 AM and 4–7 PM.
+- Demand is lowest during **late nights and early mornings**, aligning with typical work-life schedules.
 
-*Temperature and Weather:* The correlation between temperature and bike rentals is positive, indicating that users prefer biking in warmer conditions. Additionally, the analysis shows that rainfall has a negative impact on rentals, especially during heavy rainfall. These insights are crucial for anticipating user behavior based on weather conditions.
+### **Seasonal Patterns:**
+- **Summer and Autumn** see the highest bike rentals due to pleasant weather.
+- **Winter** records the lowest usage, affected by cold, snowfall, and reduced daylight.
 
-*Yearly Growth:* By examining the dataset over the years, it becomes apparent that there is a consistent increase in bike rentals from 2017 to 2018. This growth trend suggests positive user engagement and an expanding market for bike-sharing services.
+### **Weekday vs Weekend:**
+- **Weekdays**, especially **Tuesday and Wednesday**, show higher demand.
+- Slight dip on **weekends**, particularly on **Sundays**.
 
-**Predictive Modeling:**
+### **Holiday Impact:**
+- **Minimal difference** in rentals during holidays.
+- Holidays show **smooth and steady demand**, unlike sharp weekday peaks.
 
-Two predictive models were implemented to forecast bike rentals:
+### **Weather Variables:**
+- **Temperature(°C)** has a strong positive correlation with rentals.  
+- **Rainfall and Snowfall** negatively impact rentals, especially during heavy precipitation.
+- **Humidity** is moderately negatively correlated with visibility and sunlight.
 
-*RandomForestRegressor:* This model demonstrated a high level of accuracy, with a test R-squared (R²) value of 0.914. This implies that 91.4% of the variance in the test data is explained by the model, showcasing its effectiveness in predicting bike rental counts. The predictions closely align with the actual data, making it a reliable choice for deployment.
+### **Yearly Growth:**
+- A noticeable increase in total rentals from **2017 to 2018**, indicating a **growing user base and adoption**.
 
-*DecisionTreeRegressor (Hyper-Tuned):* Although slightly less accurate than the RandomForestRegressor, the hyper-tuned DecisionTreeRegressor still performed well with a test R-squared value of 0.894. The model provides valuable insights into rental predictions.
+---
 
-**Conclusion:**
+## **🧹 Data Preprocessing & Transformation**
 
-In conclusion, the project successfully combines EDA and predictive modeling to gain actionable insights into bike rental patterns. The recommendations include deploying the RandomForestRegressor due to its higher accuracy and continuous monitoring to adapt to evolving usage patterns. Leveraging insights for targeted promotions during peak hours and favorable weather conditions can enhance customer engagement and optimize operational efficiency in the bike-sharing system. The project contributes to the understanding of user behavior in bike-sharing systems, facilitating data-driven decision-making for operators and stakeholders.
+### **Outlier Detection:**
+- Outliers were found in **Wind Speed**, **Rainfall**, **Snowfall**, and **Solar Radiation**.
+- Visualized using **boxplots** and handled using transformations.
+
+### **Skewness Reduction (Transformations Applied):**
+- Compared different transformations: **Log1p**, **Square Root**, **Cube Root**.
+- Applied **Yeo-Johnson Transformation** to key features:  
+  `['Wind speed (m/s)', 'Solar Radiation (MJ/m2)', 'Rainfall(mm)', 'Snowfall (cm)', 'Rented Bike Count']`.
+
+### **Variable Normalization:**
+- QQ plots and histograms confirmed **normalization success** post-transformation.
+
+### **Encoding Categorical Features:**
+- Applied **One-Hot Encoding** to variables like `Seasons` and `Holiday`.
+
+---
+
+## **🧠 Feature Engineering & Multicollinearity Handling**
+
+### **Dropped Features:**
+- `Date`, `Year`, and `Dew point temperature(°C)` removed due to **redundancy or high correlation**.
+
+### **Multicollinearity Analysis (VIF):**
+- `Temperature(°C)` (VIF = 5.10) → High correlation with Seasons & Humidity  
+- `Seasons_Winter` (VIF = 3.92) → Overlaps with `Temperature(°C)`
+- `Humidity(%)` (VIF = 2.79) → Moderately multicollinear, retained after review
+
+### ✅ **Final Feature Set:**
+- Includes **Hour, Weekday, Month, Visibility, Wind Speed, Rainfall, Snowfall**, and **Encoded Season/Holiday Columns**.
+
+---
+
+## **📊 Hypothesis Testing & Correlation Insights**
+
+- 📈 **Rentals vs Temperature:**  
+  Correlation Coefficient = **0.56**, p-value = **0.0** → **Significant positive correlation**
+
+- 🏖️ **Holidays vs Non-Holidays:**  
+  T-Statistic = **-7.17**, p-value = **3e-12** → **Significant difference in rentals**
+
+- ❄️ **Summer vs Winter Rentals:**  
+  T-Statistic = **53.75**, p-value = **0.0** → **High seasonal variation**
+
+---
+
+## **🤖 Predictive Modeling**
+
+### ✅ **RandomForestRegressor**
+- **R² Score (Test)**: **0.914**
+- **RMSE**: Low, predictions closely aligned with actuals
+- Excellent model for **deployment and real-time predictions**
+
+### 🌳 **DecisionTreeRegressor (Tuned)**
+- **R² Score (Test)**: **0.894**
+- Performed well, but slightly less accurate than Random Forest
+- Useful for **model interpretability and quick inferences**
+
+---
+
+## **📈 Visual Analysis**
+
+- ✅ **Correlation Heatmap** revealed strong relationships between weather variables.
+- ✅ **Pairplots** exposed seasonal effects and variable interactions.
+- ✅ **Boxplots** visualized outlier reduction after transformation.
+- ✅ **Transformation plots (QQ/Histograms)** confirmed normalization success.
+
+---
+
+## **📌 Conclusion & Recommendations**
+
+- Combined **EDA, feature engineering**, and **modeling** to uncover **user behavior** and **optimize predictions**.
+- Recommend **RandomForestRegressor** for its high accuracy and robustness.
+- **Use insights for real-time demand forecasting**, targeted promotions during peak hours, and adaptive resource allocation.
+- Future scope includes integrating **live weather APIs**, optimizing fleet management, and **expanding the model** to other cities.
+
